@@ -15,6 +15,14 @@ import { supabase, COACH_CHAT_URL } from "./supabaseClient";
 const PAYWALL_URL = "https://hustlefile.io/hustle-paywall.html";
 
 /* =========================================================
+   How many recent messages get sent to the coach on each turn.
+   Full history still lives in the database and is shown in the UI
+   (and stays fully searchable) - this only caps what's re-sent to
+   the API, so a long-running thread's cost doesn't grow unbounded.
+========================================================= */
+const MAX_HISTORY_MESSAGES = 20;
+
+/* =========================================================
    QUESTIONS
 ========================================================= */
 const QUESTIONS = [
@@ -384,7 +392,8 @@ export default function App() {
   async function signUp(email, password, name) {
     setAuthError("");
     const { error } = await supabase.auth.signUp({ email, password, options: { data: { name } } });
-    if (error) setAuthError(error.message);
+    if (error) { setAuthError(error.message); return false; }
+    return true;
   }
   async function signIn(email, password) {
     setAuthError("");
@@ -591,10 +600,11 @@ export default function App() {
 
     try {
       const system = coach.system + "\n\n" + projectContextBlock(project);
+      const recentHistory = withUser.slice(-MAX_HISTORY_MESSAGES);
       const res = await fetch(COACH_CHAT_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: "Bearer " + session.access_token },
-        body: JSON.stringify({ system, messages: withUser.map((m) => ({ role: m.role, content: m.content })) })
+        body: JSON.stringify({ system, messages: recentHistory.map((m) => ({ role: m.role, content: m.content })) })
       });
       const data = await res.json();
       const replyText = data.text || data.error || "I could not generate a reply just now - try again.";
@@ -686,7 +696,7 @@ function AuthScreen({ onSignUp, onSignIn, error }) {
   const [sent, setSent] = useState(false);
 
   async function submit() {
-    if (mode === "signup") { await onSignUp(email, password, name || "Operator"); setSent(true); }
+    if (mode === "signup") { const ok = await onSignUp(email, password, name || "Operator"); if (ok) setSent(true); }
     else { await onSignIn(email, password); }
   }
 
