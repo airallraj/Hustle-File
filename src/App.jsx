@@ -1211,7 +1211,7 @@ function CoachesScreen({ projects, chatProjectId, setChatProjectId, activeCoach,
         {COACHES.map((c) => {
           const Icon = c.icon;
           const active = c.key === activeCoach;
-          return (<button key={c.key} onClick={() => setActiveCoach(c.key)} className="hf-card" style={{ padding: 13, textAlign: "left", cursor: "pointer", border: active ? "1px solid #ff2f7e" : "1px solid rgba(255,242,226,0.16)", background: active ? "rgba(255,47,126,0.1)" : undefined }}><Icon size={17} color={active ? "#ffb020" : "#00e6d8"} style={{ marginBottom: 6 }} /><div style={{ fontFamily: "Anton, sans-serif", fontSize: 13, textTransform: "uppercase" }}>{c.label}</div><div style={{ fontSize: 11, color: "rgba(255,242,226,0.55)", marginTop: 3 }}>{c.blurb}</div></button>);
+          return (<button key={c.key} onClick={() => setActiveCoach(c.key)} className="hf-card" style={{ padding: 13, textAlign: "left", cursor: "pointer", border: active ? "1px solid #ff2f7e" : "1px solid rgba(255,242,226,0.16)", background: active ? "rgba(255,47,126,0.1)" : undefined }}><Icon size={17} color={active ? "#ffb020" : "#00e6d8"} style={{ marginBottom: 6 }} /><div style={{ fontFamily: "Anton, sans-serif", fontSize: 13, textTransform: "uppercase", color: "#fff2e2" }}>{c.label}</div><div style={{ fontSize: 11, color: "rgba(255,242,226,0.55)", marginTop: 3 }}>{c.blurb}</div></button>);
         })}
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14, position: "relative" }}>
