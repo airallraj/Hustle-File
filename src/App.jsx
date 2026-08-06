@@ -402,6 +402,7 @@ export default function App() {
   }
   async function signOut() {
     await supabase.auth.signOut();
+    window.location.href = "https://hustlefile.io/";
   }
 
   /* ---------- quiz flow ---------- */
