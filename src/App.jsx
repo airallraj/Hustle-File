@@ -138,11 +138,11 @@ const OPPS = [
    COACHES
 ========================================================= */
 const COACHES = [
-  { key: "business", label: "Business Coach", icon: Rocket, blurb: "Strategy, priorities, and the hard calls.", system: "You are the Business Coach inside The Hustle File, a GTA 6-themed business headquarters app (Vice City Bureau of Commerce). Speak like a sharp, practical operator: direct, honest, no filler. Help the user prioritize, make decisions, and think through tradeoffs for their specific business. Give concrete next steps, not generic motivation. Keep replies tight - a few short paragraphs or a short list, unless the user asks for more depth." },
-  { key: "marketing", label: "Marketing Coach", icon: Megaphone, blurb: "Audience growth and the right channels.", system: "You are the Marketing Coach inside The Hustle File, a GTA 6-themed business headquarters app. Focus on audience growth, channel selection, positioning, and campaign ideas specific to the user's business. Be concrete: name actual platforms, formats, and angles rather than generic advice. Keep replies tight and actionable." },
-  { key: "sales", label: "Sales Coach", icon: Handshake, blurb: "Pricing, outreach, and closing.", system: "You are the Sales Coach inside The Hustle File, a GTA 6-themed business headquarters app. Focus on pricing strategy, outreach scripts, objection handling, and closing for the user's specific business. When useful, write out an actual message or script they could send today. Keep replies tight and practical." },
-  { key: "content", label: "Content Coach", icon: PenTool, blurb: "Ideas, hooks, and scripts.", system: "You are the Content Coach inside The Hustle File, a GTA 6-themed business headquarters app. Focus on content ideas, hooks, scripts, and posting cadence for the user's specific business. Offer specific, usable ideas rather than broad categories. Keep replies tight and practical." },
-  { key: "branding", label: "Branding Coach", icon: Palette, blurb: "Name, voice, and positioning.", system: "You are the Branding Coach inside The Hustle File, a GTA 6-themed business headquarters app. Focus on naming, visual identity direction, tone of voice, and differentiation for the user's specific business. Be specific and opinionated rather than listing generic options. Keep replies tight and practical." }
+  { key: "business", label: "Business Coach", icon: Rocket, blurb: "Strategy, priorities, and the hard calls.", system: "You are the Business Coach inside The Hustle File, a GTA 6-themed business headquarters app (Vice City Bureau of Commerce). Speak like a sharp, practical operator: direct, honest, no filler. Help the user prioritize, make decisions, and think through tradeoffs for their specific business. Give concrete next steps, not generic motivation. Keep replies tight - a few short paragraphs or a short list, unless the user asks for more depth.", samples: ["What should I focus on this week?", "Is this business idea actually worth pursuing?", "How do I know if I'm ready to raise my prices?"] },
+  { key: "marketing", label: "Marketing Coach", icon: Megaphone, blurb: "Audience growth and the right channels.", system: "You are the Marketing Coach inside The Hustle File, a GTA 6-themed business headquarters app. Focus on audience growth, channel selection, positioning, and campaign ideas specific to the user's business. Be concrete: name actual platforms, formats, and angles rather than generic advice. Keep replies tight and actionable.", samples: ["Where should I post to find my first customers?", "How do I get people to notice a brand-new page?", "What should my first piece of content actually be?"] },
+  { key: "sales", label: "Sales Coach", icon: Handshake, blurb: "Pricing, outreach, and closing.", system: "You are the Sales Coach inside The Hustle File, a GTA 6-themed business headquarters app. Focus on pricing strategy, outreach scripts, objection handling, and closing for the user's specific business. When useful, write out an actual message or script they could send today. Keep replies tight and practical.", samples: ["Write me a message I can send to a potential client", "What do I say if someone thinks my price is too high?", "How do I ask for a testimonial after finishing a job?"] },
+  { key: "content", label: "Content Coach", icon: PenTool, blurb: "Ideas, hooks, and scripts.", system: "You are the Content Coach inside The Hustle File, a GTA 6-themed business headquarters app. Focus on content ideas, hooks, scripts, and posting cadence for the user's specific business. Offer specific, usable ideas rather than broad categories. Keep replies tight and practical.", samples: ["Give me 5 content ideas for this business", "What's a strong hook for my first video?", "How often should I actually be posting?"] },
+  { key: "branding", label: "Branding Coach", icon: Palette, blurb: "Name, voice, and positioning.", system: "You are the Branding Coach inside The Hustle File, a GTA 6-themed business headquarters app. Focus on naming, visual identity direction, tone of voice, and differentiation for the user's specific business. Be specific and opinionated rather than listing generic options. Keep replies tight and practical.", samples: ["Help me come up with a name for this business", "How do I stand out from others doing the same thing?", "What should my brand's overall vibe be?"] }
 ];
 
 /* =========================================================
@@ -603,8 +603,8 @@ export default function App() {
   useEffect(() => { if (screen === "coaches" && chatProjectId) ensureChatsLoaded(chatProjectId); }, [screen, chatProjectId]);
   useEffect(() => { chatEndRef.current && chatEndRef.current.scrollIntoView({ behavior: "smooth" }); }, [coachChats, activeCoach, chatProjectId, chatLoading]);
 
-  async function sendChatMessage() {
-    const text = chatInput.trim();
+  async function sendChatMessage(overrideText) {
+    const text = (overrideText || chatInput).trim();
     if (!text || chatLoading || !chatProjectId) return;
     const project = projects.find((p) => p.id === chatProjectId);
     const coach = COACHES.find((c) => c.key === activeCoach);
@@ -1248,7 +1248,18 @@ function CoachesScreen({ projects, chatProjectId, setChatProjectId, activeCoach,
       ) : (
         <div className="hf-card" style={{ display: "flex", flexDirection: "column", height: 440 }}>
           <div className="hf-scroll" style={{ flex: 1, overflowY: "auto", padding: 18, display: "flex", flexDirection: "column", gap: 12 }}>
-            {history.length === 0 && (<div style={{ fontSize: 13, color: "rgba(255,242,226,0.5)", fontFamily: "IBM Plex Mono, monospace" }}>{coach.label} is ready. Ask about {project.name} - pricing, outreach, content, whatever's on your mind.</div>)}
+            {history.length === 0 && (
+              <div>
+                <div style={{ fontSize: 13, color: "rgba(255,242,226,0.5)", fontFamily: "IBM Plex Mono, monospace", marginBottom: 12 }}>{coach.label} is ready. Ask about {project.name} - pricing, outreach, content, whatever's on your mind. Not sure where to start? Try one of these:</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {(coach.samples || []).map((s, i) => (
+                    <button key={i} className="hf-btn" style={{ textAlign: "left", fontSize: 12.5, textTransform: "none", letterSpacing: "normal", fontFamily: "'Work Sans', sans-serif", padding: "10px 14px" }} onClick={() => sendChatMessage(s)} disabled={chatLoading}>
+                      "{s}"
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
             {history.map((m, i) => (
               <div key={m.id || i} style={{ alignSelf: m.role === "user" ? "flex-end" : "flex-start", maxWidth: "80%" }}>
                 <div style={{ background: m.role === "user" ? "rgba(0,230,216,0.14)" : "rgba(255,255,255,0.05)", border: "1px solid " + (m.role === "user" ? "rgba(0,230,216,0.35)" : "rgba(255,242,226,0.14)"), borderRadius: 8, padding: "10px 13px", fontSize: 13.5, lineHeight: 1.6, color: "rgba(255,242,226,0.92)", whiteSpace: "pre-wrap" }}>{m.content}</div>
