@@ -765,10 +765,10 @@ function SubscriptionGate({ onRecheck, onSignOut }) {
       <div style={{ fontFamily: "IBM Plex Mono, monospace", fontSize: 12, color: "#ff2f7e", letterSpacing: "0.2em", marginBottom: 16 }}>&#9670; ACCESS LOCKED</div>
       <h1 style={{ fontFamily: "Anton, sans-serif", fontSize: 32, textTransform: "uppercase", marginBottom: 14 }}>Unlock Your HQ</h1>
       <p style={{ color: "rgba(255,242,226,0.78)", fontSize: 14.5, lineHeight: 1.6, marginBottom: 26 }}>
-        Your account is set up, but there's no active Operator Access on file yet. Subscribe to unlock your dashboard, saved case files, and the five AI coaches.
+        Your account is set up, but there's no active Operator Access on file yet. Unlock it with a one-time $49 payment - your dashboard, saved case files, and the five AI coaches.
       </p>
       <a className="hf-btn pink" style={{ display: "inline-block", marginBottom: 12 }} href={PAYWALL_URL}>Go To Checkout</a>
-      <div><button className="hf-btn" style={{ marginTop: 6 }} onClick={recheck} disabled={checking}>{checking ? "Checking..." : "I just subscribed - refresh"}</button></div>
+      <div><button className="hf-btn" style={{ marginTop: 6 }} onClick={recheck} disabled={checking}>{checking ? "Checking..." : "I just paid - refresh"}</button></div>
       <div><button className="hf-btn" style={{ marginTop: 24, fontSize: 11 }} onClick={onSignOut}><LogOut size={11} style={{ verticalAlign: "-2px", marginRight: 5 }} />Sign out</button></div>
     </div>
   );
