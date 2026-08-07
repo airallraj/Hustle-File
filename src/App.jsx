@@ -693,6 +693,7 @@ function Shell({ children }) {
         .hf-opt.selected { border-color:#ff2f7e; background:rgba(255,47,126,0.12); box-shadow:inset 0 0 0 1px #ff2f7e; }
         .hf-card { background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015)); border:1px solid rgba(255,242,226,0.16); border-radius:6px; }
         .hf-input { background:rgba(0,0,0,0.2); border:1px solid rgba(255,242,226,0.2); color:#fff2e2; padding:11px 13px; border-radius:3px; font-family:'Work Sans', sans-serif; font-size:14px; width:100%; }
+        .hf-input option { background:#160a24; color:#fff2e2; }
         .hf-input:focus { outline:none; border-color:#00e6d8; }
         .hf-scroll::-webkit-scrollbar { width:8px; }
         .hf-scroll::-webkit-scrollbar-thumb { background:rgba(255,242,226,0.2); border-radius:4px; }
